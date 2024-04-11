@@ -1,5 +1,6 @@
 'use client'
 import { Button } from '@/components/ui/button'
+import { UserButton, useUser } from '@clerk/nextjs'
 import { Plus } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -8,6 +9,7 @@ import React, { useEffect } from 'react'
 
 const Navbar = () => {
     const path = usePathname();
+    const { user, isSignedIn } = useUser()
     useEffect(() => {
         console.log(path)
     }, [])
@@ -24,9 +26,14 @@ const Navbar = () => {
                   ${path == '/agentfinder' ? 'font-semibold text-[17px] text-primary' : 'nav-link'}`}>Agent Finder</li></Link>
                 </ul>
             </div>
-            <div className='flex gap-2'>
+            <div className='flex gap-2 items-center'>
                 <Button className='flex gap-2 h-8 px-2 text-sm'><Plus />Post Your Ad</Button>
-                <Button variant='outline' className='h-8 px-2 text-sm'>Login</Button>
+                {isSignedIn ? <UserButton /> :
+                    <Link href={'/sign-in'}>
+                        <Button variant='outline' className='h-8 px-2 text-sm'>Login</Button>
+                    </Link>
+                }
+
             </div>
         </div>
     )
